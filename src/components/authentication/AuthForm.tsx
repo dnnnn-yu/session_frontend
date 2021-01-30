@@ -1,18 +1,20 @@
 
 import React, { FormEvent, useState } from 'react';
 import railsApi from '../../config/route';
+import {Link} from 'react-router-dom'
+import LockIcon from '@material-ui/icons/Lock';
 import { Avatar, Button, CssBaseline, TextField, Typography, makeStyles, Container } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%',
@@ -28,6 +30,8 @@ type Props = {
 }
 
 const AuthForm: React.FC<Props> = (props) => {
+  const buttonName = props.endPoint === '/sign_in' ? "ログイン" : "新規登録"
+  const nextDescription = props.endPoint === '/sign_in' ? "アカウントをお持ちでない方は新規登録" : "アカウントをお持ちの方はログイン"
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const classes = useStyles();
@@ -55,9 +59,10 @@ const AuthForm: React.FC<Props> = (props) => {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
+          <LockIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
-          ログイン
+          {buttonName}
         </Typography>
         <form className={classes.form} noValidate onSubmit={(event) => { handleAuth(event) }}>
           <TextField
@@ -95,9 +100,12 @@ const AuthForm: React.FC<Props> = (props) => {
             color="primary"
             className={classes.submit}
           >
-            ログイン
+            {buttonName}
           </Button>
         </form>
+        <Link style={{color: 'gray', fontSize: '12px', marginTop: "5px"}}to={props.endPoint === "/sign_in" ? "/sign_up" : "/sign_in"}>
+         {nextDescription}へ
+        </Link>
       </div>
     </Container>
   );

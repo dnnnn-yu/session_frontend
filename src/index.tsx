@@ -1,18 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './components/Home';
-import SignIn from './components/authentication/SignIn';
-import SignUp from './components/authentication/SignUp';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
- <BrowserRouter>
- <Route exact path="/" component={Home} />
-  <Route path="/sign_in" component={SignIn} />
-  <Route path="/sign_up" component={SignUp} />
- </BrowserRouter>
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );

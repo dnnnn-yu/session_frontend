@@ -1,4 +1,8 @@
 import React from 'react';
+import SignIn from './authentication/SignIn';
+import SignUp from './authentication/SignUp';
+import { BrowserRouter, Route } from "react-router-dom";
+
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -48,7 +52,7 @@ interface Props {
   window?: () => Window;
 }
 
-const Home: React.FC<Props> = (props) => {
+const App: React.FC<Props> = (props) => {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -64,10 +68,12 @@ const Home: React.FC<Props> = (props) => {
         <ListItem style={{color: 'gray', justifyContent: 'flex-end'}}>
           <CloseIcon onClick={() => {handleDrawerToggle();}}/>
         </ListItem>
-        <ListItem button>
-          <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-          <ListItemText primary="ログアウト" />
-        </ListItem>
+          <a style={{textDecoration: 'none', color: '#000000DE'}} href="/sign_in">
+            <ListItem button>
+              <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+              <ListItemText primary="ログイン" />
+            </ListItem>
+          </a>
       <ListItem button>
           <ListItemIcon>< AccountCircleIcon /></ListItemIcon>
           <ListItemText primary="プロフィール" />
@@ -91,7 +97,7 @@ const Home: React.FC<Props> = (props) => {
       <CssBaseline />
       <AppBar position="fixed" style={{backgroundColor: 'black'}}>
         <Toolbar style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Typography variant="h6" noWrap>
+            <Typography variant="h5" noWrap>
               Session!
             </Typography>
             <IconButton
@@ -127,15 +133,13 @@ const Home: React.FC<Props> = (props) => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div>
-          </div>
-        <Typography>
-          Session! はミュージシャンのためのマッチングアプリです。<br/>
-          一緒に音楽をしたいと思える仲間を見つけ、音楽を楽しみましょう。
-        </Typography>
+        <BrowserRouter>
+          <Route path="/sign_in" component={SignIn} />
+          <Route path="/sign_up" component={SignUp} />
+        </BrowserRouter>
       </main>
     </div>
   );
 }
 
-export default Home;
+export default App;
