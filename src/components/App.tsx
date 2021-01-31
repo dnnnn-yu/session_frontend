@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Top from './top/Top';
 import SignIn from './authentication/SignIn';
 import SignUp from './authentication/SignUp';
+import ProfileForm from './profile/ProfileForm';
 
 // App Bar & Drawer
 import AppBar from '@material-ui/core/AppBar';
@@ -96,7 +97,7 @@ const App: React.FC<Props> = (props) => {
         <DrawerItem url='sign_in' title='ログイン'>
           <ExitToAppIcon />
         </DrawerItem>
-        <DrawerItem url='/' title='プロフィール'>
+        <DrawerItem url='profile' title='プロフィール'>
           < AccountCircleIcon />
         </DrawerItem>
         <DrawerItem url='/' title='メッセージ'>
@@ -159,6 +160,7 @@ const App: React.FC<Props> = (props) => {
             <Route exact path="/" component={Top} />
             <Route path="/sign_in" component={SignIn} />
             <Route path="/sign_up" component={SignUp} />
+            <Route path="/profile" component={ProfileForm} />
           </Switch>
         </main>
       </div>
