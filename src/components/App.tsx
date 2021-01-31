@@ -1,7 +1,7 @@
 import React from 'react';
 import SignIn from './authentication/SignIn';
 import SignUp from './authentication/SignUp';
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -68,12 +68,12 @@ const App: React.FC<Props> = (props) => {
         <ListItem style={{color: 'gray', justifyContent: 'flex-end'}}>
           <CloseIcon onClick={() => {handleDrawerToggle();}}/>
         </ListItem>
-          <a style={{textDecoration: 'none', color: '#000000DE'}} href="/sign_in">
+          <Link style={{textDecoration: 'none', color: '#000000DE'}} to="/sign_in">
             <ListItem button>
               <ListItemIcon><ExitToAppIcon /></ListItemIcon>
               <ListItemText primary="ログイン" />
             </ListItem>
-          </a>
+          </Link>
       <ListItem button>
           <ListItemIcon>< AccountCircleIcon /></ListItemIcon>
           <ListItemText primary="プロフィール" />
@@ -93,52 +93,59 @@ const App: React.FC<Props> = (props) => {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" style={{backgroundColor: 'black'}}>
-        <Toolbar style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Typography variant="h5" noWrap>
-              Session!
-            </Typography>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="fixed" style={{backgroundColor: 'black'}}>
+          <Toolbar style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Link style={{textDecoration: 'none', color: 'white'}} to='/'>
+                <Typography variant="h5" noWrap>
+                  Session!
+                </Typography>
+              </Link>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+              <MenuIcon className={classes.menuButton}/>
+              
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <nav aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor='right'
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
             >
-            <MenuIcon className={classes.menuButton}/>
-            
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <nav aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor='right'
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <BrowserRouter>
-          <Route path="/sign_in" component={SignIn} />
-          <Route path="/sign_up" component={SignUp} />
-        </BrowserRouter>
-      </main>
-    </div>
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Switch>
+            <Route exact path="/">
+              ホーム画面です
+            </Route>
+            <Route path="/sign_in" component={SignIn} />
+            <Route path="/sign_up" component={SignUp} />
+          </Switch>
+        </main>
+      </div>
+    </Router>
   );
 }
 
