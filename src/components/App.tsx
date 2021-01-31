@@ -1,8 +1,12 @@
 import React from 'react';
+
+// Routing
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Top from './top/Top';
 import SignIn from './authentication/SignIn';
 import SignUp from './authentication/SignUp';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
+// App Bar & Drawer
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import { ReportRounded } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -52,6 +57,11 @@ interface Props {
   window?: () => Window;
 }
 
+interface DrawerItemProps {
+  url: string
+  title: string
+}
+
 const App: React.FC<Props> = (props) => {
   const { window } = props;
   const classes = useStyles();
@@ -62,30 +72,39 @@ const App: React.FC<Props> = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const DrawerItem: React.FC<DrawerItemProps> = (props) => {
+    return(
+      <Link 
+        style={{textDecoration: 'none', color: '#000000DE'}}
+        to={props.url}
+        onClick={()=>{handleDrawerToggle();}}
+      >
+        <ListItem button>
+        <ListItemIcon>{props.children}</ListItemIcon>
+        <ListItemText primary={props.title} />
+        </ListItem>
+      </Link>
+    );
+  };
+
   const drawer = (
     <div>
       <List>
         <ListItem style={{color: 'gray', justifyContent: 'flex-end'}}>
           <CloseIcon onClick={() => {handleDrawerToggle();}}/>
         </ListItem>
-          <Link style={{textDecoration: 'none', color: '#000000DE'}} to="/sign_in">
-            <ListItem button>
-              <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-              <ListItemText primary="ログイン" />
-            </ListItem>
-          </Link>
-      <ListItem button>
-          <ListItemIcon>< AccountCircleIcon /></ListItemIcon>
-          <ListItemText primary="プロフィール" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon><MailIcon /></ListItemIcon>
-          <ListItemText primary="メッセージ" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>< BookmarkBorderIcon /></ListItemIcon>
-          <ListItemText primary="保存記事" />
-        </ListItem>
+        <DrawerItem url='sign_in' title='ログイン'>
+          <ExitToAppIcon />
+        </DrawerItem>
+        <DrawerItem url='/' title='プロフィール'>
+          < AccountCircleIcon />
+        </DrawerItem>
+        <DrawerItem url='/' title='メッセージ'>
+          <MailIcon />
+        </DrawerItem>
+        <DrawerItem url='/' title='保存記事'>
+          < BookmarkBorderIcon />
+        </DrawerItem>
       </List>
     </div>
   );
@@ -137,9 +156,7 @@ const App: React.FC<Props> = (props) => {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/">
-              ホーム画面です
-            </Route>
+            <Route exact path="/" component={Top} />
             <Route path="/sign_in" component={SignIn} />
             <Route path="/sign_up" component={SignUp} />
           </Switch>
