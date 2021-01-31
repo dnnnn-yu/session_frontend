@@ -1,4 +1,5 @@
 import React from 'react';
+import railsApi from '../config/route';
 
 // Routing
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -26,7 +27,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
-import { ReportRounded } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -50,21 +50,39 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-}
-
 interface DrawerItemProps {
   url: string
   title: string
 }
 
-const App: React.FC<Props> = (props) => {
-  const { window } = props;
+const App: React.FC = () => {
+  const [loginStatus, setLoginStatus] = React.useState<boolean>(false);
+
+  const loginCheck = () => {
+    railsApi.authRequest({
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'uid': localStorage.getItem('uid')
+      },
+      url: 'login_check',
+    })
+    .then(res => {
+      if (res.status === 200) {
+        setLoginStatus(true);
+      }
+    })
+    .catch(() => {
+      setLoginStatus(false);
+    })
+  };
+
+  React.useEffect(() => {
+    loginCheck();
+  })
+
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -87,16 +105,14 @@ const App: React.FC<Props> = (props) => {
       </Link>
     );
   };
-
-  const drawer = (
-    <div>
+  
+  let drawer;
+  if (loginStatus) {
+    drawer = (
       <List>
         <ListItem style={{color: 'gray', justifyContent: 'flex-end'}}>
           <CloseIcon onClick={() => {handleDrawerToggle();}}/>
         </ListItem>
-        <DrawerItem url='sign_in' title='ログイン'>
-          <ExitToAppIcon />
-        </DrawerItem>
         <DrawerItem url='profile' title='プロフィール'>
           < AccountCircleIcon />
         </DrawerItem>
@@ -106,11 +122,24 @@ const App: React.FC<Props> = (props) => {
         <DrawerItem url='/' title='保存記事'>
           < BookmarkBorderIcon />
         </DrawerItem>
+        <ListItem button onClick={()=>{localStorage.clear(); window.location.href='/'}}>
+          <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+          <ListItemText primary='ログアウト' />
+        </ListItem>
       </List>
-    </div>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
+    );
+  } else {
+    drawer = (
+      <List>
+        <ListItem style={{color: 'gray', justifyContent: 'flex-end'}}>
+          <CloseIcon onClick={() => {handleDrawerToggle();}}/>
+        </ListItem>
+        <DrawerItem url='sign_in' title='ログイン'>
+          <ExitToAppIcon />
+        </DrawerItem>
+      </List>
+   );
+  }
 
   return (
     <Router>
@@ -138,7 +167,6 @@ const App: React.FC<Props> = (props) => {
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
             <Drawer
-              container={container}
               variant="temporary"
               anchor='right'
               open={mobileOpen}
