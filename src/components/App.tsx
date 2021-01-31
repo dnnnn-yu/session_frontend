@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import railsApi from '../config/route';
 
 // Routing
@@ -56,7 +56,7 @@ interface DrawerItemProps {
 }
 
 const App: React.FC = () => {
-  const [loginStatus, setLoginStatus] = React.useState<boolean>(false);
+  const [loginStatus, setLoginStatus] = useState<boolean>(false);
 
   const loginCheck = () => {
     railsApi.authRequest({
@@ -79,13 +79,13 @@ const App: React.FC = () => {
     })
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     loginCheck();
   })
 
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
