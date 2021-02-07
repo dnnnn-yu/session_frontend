@@ -4,7 +4,7 @@ import {
   Container, Chip, Select, Input, MenuItem, Theme, useTheme 
 } from '@material-ui/core';
 
-// Radio
+// Radio Button
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -61,14 +61,14 @@ const names = [
   'キーボード',
 ];
 
-function getStyles(name: string, partName: string[], theme: Theme) {
+const getStyles = (name: string, partName: string[], theme: Theme) => {
   return {
     fontWeight:
       partName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
-}
+};
 
 const Profile: React.FC = () => {
   const classes = useStyles();
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
           プロフィール
         </Typography>
         <form className={classes.form} noValidate>
-          <FormLabel className={classes.form} style={{marginTop: '0px'}} component="legend">名前(必須)</FormLabel>
+          <FormLabel className={classes.form} style={{marginTop: '0px'}} component="legend">ニックネーム(必須)</FormLabel>
           <TextField
             variant="standard"
             required
